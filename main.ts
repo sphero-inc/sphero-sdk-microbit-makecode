@@ -31,6 +31,15 @@ enum rgbLEDs {
     rear_2 = 27
 }
 
+enum Sensable {
+    //% block="Yaw"
+    yaw = 0,
+    //% block="Pitch"
+    pitch = 1,
+    //% block="Roll"
+    roll = 2,
+}
+
 //% weight=100 color=#00A654 icon="\uf0e7" block="BotControl"
 namespace BotControl {
     let currentHeading: number = 0;
@@ -144,5 +153,59 @@ namespace BotControl {
         let msg = command.buildApiCommandMessageWithDefaultFlags(0x11, 0x01, 0x1A, "", 0x1A, "", msg_data);
 
         serial.writeBuffer(pins.createBufferFromArray(msg.commandRawBytes));
+    }
+
+    let sensor_bitmask: number = 0;
+    let yaw_enabled: boolean = false;
+    let pitch_enabled: boolean = false;
+    let roll_enabled: boolean = false;
+    let _yaw: number = 0;
+    let _pitch: number = 0;
+    let _roll: number = 0;
+
+    function set_sensor_streaming_mask(mask: number): void {
+        let msg_data: Array<number> = [0x00, 0x64, 0x00];
+        let mask_array: Array<number> = ArrayFromUint32(mask);
+
+        for (let i: number = 0; i < mask_array.length; i++) {
+            msg_data[i + 3] = mask_array[i];
+        }
+
+        let msg = command.buildApiCommandMessageWithDefaultFlags(0x12, 0x01, 0x18, "", 0x00, "", msg_data);
+        serial.writeBuffer(pins.createBufferFromArray(msg.commandRawBytes));
+    }
+
+    //% block="Yaw"
+    //% subcategory=Sensors
+    export function Yaw(): number {
+        if (!yaw_enabled) {
+            sensor_bitmask != 0x00010000;
+            set_sensor_streaming_mask(sensor_bitmask);
+            yaw_enabled = true;
+        }
+        return _yaw;
+    }
+
+    //% block="Pitch"
+    //% subcategory=Sensors
+    export function Pitch(): number {
+        if (!pitch_enabled) {
+            sensor_bitmask != 0x00040000;
+            set_sensor_streaming_mask(sensor_bitmask);
+            pitch_enabled = true;
+        }
+
+        return _pitch;
+    }
+
+    //% block="Roll"
+    //% subcategory=Sensors
+    export function Roll(): number {
+        if (!roll_enabled) {
+            sensor_bitmask != 0x00020000;
+            set_sensor_streaming_mask(sensor_bitmask);
+            roll_enabled = true;
+        }
+        return _roll;
     }
 }
