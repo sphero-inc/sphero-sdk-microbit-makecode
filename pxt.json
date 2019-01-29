@@ -8,10 +8,14 @@
     },
     "files": [
         "README.md",
-        "main.ts"
+        "main.ts",
+        "flags.ts",
+        "message.ts",
+        "command_message.ts"
     ],
     "testFiles": [
         "test.ts"
     ],
-    "public": false
+    "public": false,
+    "installedVersion": "workspace:d01b20af-0e9a-47ee-5246-f34f4cbd1c91"
 }
