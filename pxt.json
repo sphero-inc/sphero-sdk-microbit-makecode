@@ -11,7 +11,10 @@
         "main.ts",
         "flags.ts",
         "message.ts",
-        "command_message.ts"
+        "command_message.ts",
+        "parser.ts",
+        "command_processor.ts",
+        "utilities.ts"
     ],
     "testFiles": [
         "test.ts"

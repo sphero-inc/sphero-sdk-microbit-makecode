@@ -116,7 +116,7 @@ namespace message {
             return this._hasError;
         }
 
-        protected constructor(flags: number, sequenceNumber: number,
+        public constructor(flags: number, sequenceNumber: number,
             targetId: number, sourceId: number,
             deviceId: number, deviceName: string,
             commandId: number, commandName: string,

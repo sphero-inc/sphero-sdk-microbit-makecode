@@ -163,6 +163,27 @@ namespace BotControl {
     let _pitch: number = 0;
     let _roll: number = 0;
 
+    let apiParser = new parser.ApiParser();
+
+    function createArrayFromBuffer(buffer: Buffer): Array<number> {
+        let output: Array<number> = [];
+        for (let i:number = 0; i < buffer.length; i++) {
+            output[i] = buffer[i];
+        }
+
+        return output;
+    }
+
+    function createArrayFromString(str: string): Array<number> {
+        let output: Array<number> = [];
+
+        for (let i:number = 0; i < str.length; i++) {
+            output[i] = str.charCodeAt(i);
+        }
+
+        return output;
+    }
+
     function set_sensor_streaming_mask(mask: number): void {
         let msg_data: Array<number> = [0x00, 0x64, 0x00];
         let mask_array: Array<number> = ArrayFromUint32(mask);
@@ -172,7 +193,14 @@ namespace BotControl {
         }
 
         let msg = command.buildApiCommandMessageWithDefaultFlags(0x12, 0x01, 0x18, "", 0x00, "", msg_data);
-        serial.writeBuffer(pins.createBufferFromArray(msg.commandRawBytes));
+        serial.writeBuffer(pins.createBufferFromArray(msg.commandRawBytes));        
+
+        serial.onDataReceived(String.fromCharCode(flags.ApiParserFlags.endOfPacket), function () {
+            let number_buffer: Array<number> = createArrayFromString(serial.readUntil(String.fromCharCode(0xD8)));
+            apiParser.queueBytes(number_buffer);
+            number_buffer = createArrayFromBuffer(serial.readBuffer(0));
+            apiParser.queueBytes(number_buffer);
+        })
     }
 
     //% block="Yaw"
