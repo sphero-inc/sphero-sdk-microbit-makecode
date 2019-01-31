@@ -8,8 +8,12 @@ makecode
 ├── pxt
 ├── pxt-common-packages
 └── pxt-microbit
-    └── libs
-        └── sphero-rvr
+    ├── …
+    ├── libs
+    │   ├── …
+    │   ├── sphero-rvr
+    │   └── …
+    └── …
 ```
 
 Don't forget to add the extension to your target in it's pxtarget.json under `bundleddirs`
