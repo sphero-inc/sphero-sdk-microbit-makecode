@@ -1,5 +1,5 @@
 
-enum MotorMode {
+enum SpheroRvrMotorMode {
     //% block="off"
     off = 0,
     //% block="forward"
@@ -8,7 +8,7 @@ enum MotorMode {
     backward = 2
 }
 
-enum rgbLEDs {
+enum SpheroRvrRgbLeds {
     //% block="Left Status"
     left_status = 0,
     //% block="Right Status"
@@ -31,7 +31,7 @@ enum rgbLEDs {
     rear_2 = 27
 }
 
-enum Sensable {
+enum SpheroRvrSensable {
     //% block="Yaw"
     yaw = 0,
     //% block="Pitch"
@@ -40,20 +40,24 @@ enum Sensable {
     roll = 2,
 }
 
-//% weight=100 color=#00A654 icon="\uf0e7" block="BotControl"
-namespace BotControl {
+//% weight=100 color=#00A654 icon="\uf0e7" block="Sphero RVR"
+namespace spheroRvr {
     let currentHeading: number = 0;
 
-    function ArrayFromUint16(value: number): Array<number> {
+    function arrayFromUint16(value: number): Array<number> {
 
         return [((value >> 8) & 0xFF), (value & 0xFF)];
     }
 
-    function ArrayFromUint32(value: number): Array<number> {
+    function arrayFromUint32(value: number): Array<number> {
         return [((value >> 24) & 0xFF), ((value >> 16) & 0xFF), ((value >> 8) & 0xFF), (value & 0xFF)];
     }
 
+    /**
+     * Drive with a Heading from 0 to 359 and a speed from -255 to +255
+     */
     //% block="drive with %heading|Heading and %speed|Speed"
+    //% help=spheroRvr/drive
     //% heading.min=0 heading.max=359
     //% speed.min=-255 speed.max=255 
     //% subcategory=Movement
@@ -65,7 +69,7 @@ namespace BotControl {
         }
 
         let msg_data: Array<number> = [Math.abs(speed)];
-        let headingArray: Array<number> = ArrayFromUint16(currentHeading);
+        let headingArray: Array<number> = arrayFromUint16(currentHeading);
         for (let i: number = 0; i < 2; i++) {
             msg_data[i + 1] = headingArray[i];
         }
@@ -75,14 +79,18 @@ namespace BotControl {
         serial.writeBuffer(pins.createBufferFromArray(msg.commandRawBytes));
     }
 
+    /**
+     * Stop the Robot from Driving
+     */
     //% block="stop"
+    //% help=spheroRvr/stop
     //% subcategory=Movement
     export function stop(): void {
         let speed = 0x00;
         let flags = 0x00;
 
         let msg_data: Array<number> = [speed];
-        let headingArray: Array<number> = ArrayFromUint16(currentHeading)
+        let headingArray: Array<number> = arrayFromUint16(currentHeading)
         for (let i: number = 0; i < 2; i++) {
             msg_data[i + 1] = headingArray[i];
         }
@@ -92,17 +100,20 @@ namespace BotControl {
         serial.writeBuffer(pins.createBufferFromArray(msg.commandRawBytes));
     }
 
-    //% block="Set Raw Motors with LeftMode:%left_mode| LeftSpeed:%left_speed| RightMode:%right_mode| RightSpeed:%right_speed|"
+    /**
+     * Manually control the left and right motors
+     */
+    //% block="set raw motors with Left Mode:%left_mode| Left Speed:%left_speed| Right Mode:%right_mode| Right Speed:%right_speed|"
     //% left_speed.min=0 left_speed.max=255
     //% right_speed.min=0 right_speed.max=255
     //% subcategory=Movement
-    export function rawMotors(left_mode: MotorMode, left_speed: number, right_mode: MotorMode, right_speed: number): void {
+    export function rawMotors(left_mode: SpheroRvrMotorMode, left_speed: number, right_mode: SpheroRvrMotorMode, right_speed: number): void {
         let msg_data: Array<number> = [left_mode, left_speed, right_mode, right_speed];
         let msg = command.buildApiCommandMessageWithDefaultFlags(0x12, 0x01, 0x16, "", 0x01, "", msg_data);
         serial.writeBuffer(pins.createBufferFromArray(msg.commandRawBytes));
     }
 
-    //% block="Set All LEDs to red:%red| green:%green| blue:%blue|"
+    //% block="set all LEDs to red:%red| green:%green| blue:%blue|"
     //% red.min=0 red.max=255
     //% green.min=0 green.max=255
     //% blue.min=0 blue.max=255
@@ -125,14 +136,14 @@ namespace BotControl {
         serial.writeBuffer(pins.createBufferFromArray(msg.commandRawBytes));
     }
 
-    //% block="Set RGB LED:%index| to red:%red| green:%green| blue:%blue|"
+    //% block="set RGB LED:%index| to red:%red| green:%green| blue:%blue|"
     //% red.min=0 red.max=255
     //% green.min=0 green.max=255
     //% blue.min=0 blue.max=255
     //% subcategory=Lights
-    export function set_rgb_led_by_index(index: rgbLEDs, red: number, green: number, blue: number): void {
+    export function set_rgb_led_by_index(index: SpheroRvrRgbLeds, red: number, green: number, blue: number): void {
         let led_bitvalue: number = (0x07 << index);
-        let led_bitmask: Array<number> = ArrayFromUint32(led_bitvalue);
+        let led_bitmask: Array<number> = arrayFromUint32(led_bitvalue);
         let led_data: Array<number> = [red, green, blue];
 
         let msg_data: Array<number> = led_bitmask;
@@ -144,7 +155,7 @@ namespace BotControl {
         serial.writeBuffer(pins.createBufferFromArray(msg.commandRawBytes));
     }
 
-    //% block="Set Undercarriage LED to %intensity|"
+    //% block="set Undercarriage LED to %intensity|"
     //% intensity.min=0 intensity.max=255
     //% subcategory=Lights
     export function set_undercarriage_white_led(intensity: number): void {
@@ -186,7 +197,7 @@ namespace BotControl {
 
     function set_sensor_streaming_mask(mask: number): void {
         let msg_data: Array<number> = [0x00, 0x64, 0x00];
-        let mask_array: Array<number> = ArrayFromUint32(mask);
+        let mask_array: Array<number> = arrayFromUint32(mask);
 
         for (let i: number = 0; i < mask_array.length; i++) {
             msg_data[i + 3] = mask_array[i];
@@ -203,7 +214,7 @@ namespace BotControl {
         })
     }
 
-    //% block="Yaw"
+    //% block="yaw"
     //% subcategory=Sensors
     export function Yaw(): number {
         if (!yaw_enabled) {
@@ -214,7 +225,7 @@ namespace BotControl {
         return _yaw;
     }
 
-    //% block="Pitch"
+    //% block="pitch"
     //% subcategory=Sensors
     export function Pitch(): number {
         if (!pitch_enabled) {
@@ -226,7 +237,7 @@ namespace BotControl {
         return _pitch;
     }
 
-    //% block="Roll"
+    //% block="roll"
     //% subcategory=Sensors
     export function Roll(): number {
         if (!roll_enabled) {

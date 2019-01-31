@@ -1,4 +1,4 @@
-# pxt-bot-control
+# Sphero-RVR
 
 
 
