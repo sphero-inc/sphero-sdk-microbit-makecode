@@ -8,13 +8,11 @@
     },
     "files": [
         "README.md",
-        "main.ts",
-        "flags.ts",
-        "message.ts",
-        "command_message.ts",
-        "parser.ts",
-        "command_processor.ts",
-        "utilities.ts"
+        "sphero_rvr.ts",
+        "sphero_constants.ts",
+        "sphero_message.ts",
+        "sphero_command.ts",
+        "sphero_utilities.ts"
     ],
     "testFiles": [
         "test.ts"

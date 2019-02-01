@@ -31,27 +31,12 @@ enum SpheroRvrRgbLeds {
     rear_2 = 27
 }
 
-enum SpheroRvrSensable {
-    //% block="Yaw"
-    yaw = 0,
-    //% block="Pitch"
-    pitch = 1,
-    //% block="Roll"
-    roll = 2,
-}
-
+/**
+ * Control A Sphero RVR Using these Commands
+ */
 //% weight=100 color=#00A654 icon="\uf0e7" block="Sphero RVR"
 namespace spheroRvr {
     let currentHeading: number = 0;
-
-    function arrayFromUint16(value: number): Array<number> {
-
-        return [((value >> 8) & 0xFF), (value & 0xFF)];
-    }
-
-    function arrayFromUint32(value: number): Array<number> {
-        return [((value >> 24) & 0xFF), ((value >> 16) & 0xFF), ((value >> 8) & 0xFF), (value & 0xFF)];
-    }
 
     /**
      * Drive with a Heading from 0 to 359 and a speed from -255 to +255
@@ -69,13 +54,13 @@ namespace spheroRvr {
         }
 
         let msg_data: Array<number> = [Math.abs(speed)];
-        let headingArray: Array<number> = arrayFromUint16(currentHeading);
+        let headingArray: Array<number> = SpheroUtilities.int16ToByteArray(currentHeading);
         for (let i: number = 0; i < 2; i++) {
             msg_data[i + 1] = headingArray[i];
         }
         msg_data[3] = flags;
 
-        let msg = command.buildApiCommandMessageWithDefaultFlags(0x12, 0x01, 0x16, "", 0x07, "", msg_data);
+        let msg = spheroMessage.buildApiCommandMessageWithDefaultFlags(0x12, 0x01, 0x16, "", 0x07, "", msg_data);
         serial.writeBuffer(pins.createBufferFromArray(msg.commandRawBytes));
     }
 
@@ -90,13 +75,13 @@ namespace spheroRvr {
         let flags = 0x00;
 
         let msg_data: Array<number> = [speed];
-        let headingArray: Array<number> = arrayFromUint16(currentHeading)
+        let headingArray: Array<number> = SpheroUtilities.int16ToByteArray(currentHeading);
         for (let i: number = 0; i < 2; i++) {
             msg_data[i + 1] = headingArray[i];
         }
         msg_data[3] = flags;
 
-        let msg = command.buildApiCommandMessageWithDefaultFlags(0x12, 0x01, 0x16, "", 0x07, "", msg_data);
+        let msg = spheroMessage.buildApiCommandMessageWithDefaultFlags(0x12, 0x01, 0x16, "", 0x07, "", msg_data);
         serial.writeBuffer(pins.createBufferFromArray(msg.commandRawBytes));
     }
 
@@ -109,7 +94,7 @@ namespace spheroRvr {
     //% subcategory=Movement
     export function rawMotors(left_mode: SpheroRvrMotorMode, left_speed: number, right_mode: SpheroRvrMotorMode, right_speed: number): void {
         let msg_data: Array<number> = [left_mode, left_speed, right_mode, right_speed];
-        let msg = command.buildApiCommandMessageWithDefaultFlags(0x12, 0x01, 0x16, "", 0x01, "", msg_data);
+        let msg = spheroMessage.buildApiCommandMessageWithDefaultFlags(0x12, 0x01, 0x16, "", 0x01, "", msg_data);
         serial.writeBuffer(pins.createBufferFromArray(msg.commandRawBytes));
     }
 
@@ -132,7 +117,7 @@ namespace spheroRvr {
             msg_data[i + 4] = led_data[i];
         }
 
-        let msg = command.buildApiCommandMessageWithDefaultFlags(0x11, 0x01, 0x1A, "", 0x1A, "", msg_data);
+        let msg = spheroMessage.buildApiCommandMessageWithDefaultFlags(0x11, 0x01, 0x1A, "", 0x1A, "", msg_data);
         serial.writeBuffer(pins.createBufferFromArray(msg.commandRawBytes));
     }
 
@@ -143,7 +128,7 @@ namespace spheroRvr {
     //% subcategory=Lights
     export function set_rgb_led_by_index(index: SpheroRvrRgbLeds, red: number, green: number, blue: number): void {
         let led_bitvalue: number = (0x07 << index);
-        let led_bitmask: Array<number> = arrayFromUint32(led_bitvalue);
+        let led_bitmask: Array<number> = SpheroUtilities.int32ToByteArray(led_bitvalue);
         let led_data: Array<number> = [red, green, blue];
 
         let msg_data: Array<number> = led_bitmask;
@@ -151,7 +136,7 @@ namespace spheroRvr {
             msg_data[i + 4] = led_data[i];
         }
 
-        let msg = command.buildApiCommandMessageWithDefaultFlags(0x11, 0x01, 0x1A, "", 0x1A, "", msg_data);
+        let msg = spheroMessage.buildApiCommandMessageWithDefaultFlags(0x11, 0x01, 0x1A, "", 0x1A, "", msg_data);
         serial.writeBuffer(pins.createBufferFromArray(msg.commandRawBytes));
     }
 
@@ -161,90 +146,8 @@ namespace spheroRvr {
     export function set_undercarriage_white_led(intensity: number): void {
         let msg_data: Array<number> = [0x40, 0x00, 0x00, 0x00, intensity];
 
-        let msg = command.buildApiCommandMessageWithDefaultFlags(0x11, 0x01, 0x1A, "", 0x1A, "", msg_data);
+        let msg = spheroMessage.buildApiCommandMessageWithDefaultFlags(0x11, 0x01, 0x1A, "", 0x1A, "", msg_data);
 
         serial.writeBuffer(pins.createBufferFromArray(msg.commandRawBytes));
-    }
-
-    let sensor_bitmask: number = 0;
-    let yaw_enabled: boolean = false;
-    let pitch_enabled: boolean = false;
-    let roll_enabled: boolean = false;
-    let _yaw: number = 0;
-    let _pitch: number = 0;
-    let _roll: number = 0;
-
-    let apiParser = new parser.ApiParser();
-
-    function createArrayFromBuffer(buffer: Buffer): Array<number> {
-        let output: Array<number> = [];
-        for (let i:number = 0; i < buffer.length; i++) {
-            output[i] = buffer[i];
-        }
-
-        return output;
-    }
-
-    function createArrayFromString(str: string): Array<number> {
-        let output: Array<number> = [];
-
-        for (let i:number = 0; i < str.length; i++) {
-            output[i] = str.charCodeAt(i);
-        }
-
-        return output;
-    }
-
-    function set_sensor_streaming_mask(mask: number): void {
-        let msg_data: Array<number> = [0x00, 0x64, 0x00];
-        let mask_array: Array<number> = arrayFromUint32(mask);
-
-        for (let i: number = 0; i < mask_array.length; i++) {
-            msg_data[i + 3] = mask_array[i];
-        }
-
-        let msg = command.buildApiCommandMessageWithDefaultFlags(0x12, 0x01, 0x18, "", 0x00, "", msg_data);
-        serial.writeBuffer(pins.createBufferFromArray(msg.commandRawBytes));        
-
-        serial.onDataReceived(String.fromCharCode(flags.ApiParserFlags.endOfPacket), function () {
-            let number_buffer: Array<number> = createArrayFromString(serial.readUntil(String.fromCharCode(0xD8)));
-            apiParser.queueBytes(number_buffer);
-            number_buffer = createArrayFromBuffer(serial.readBuffer(0));
-            apiParser.queueBytes(number_buffer);
-        })
-    }
-
-    //% block="yaw"
-    //% subcategory=Sensors
-    export function Yaw(): number {
-        if (!yaw_enabled) {
-            sensor_bitmask != 0x00010000;
-            set_sensor_streaming_mask(sensor_bitmask);
-            yaw_enabled = true;
-        }
-        return _yaw;
-    }
-
-    //% block="pitch"
-    //% subcategory=Sensors
-    export function Pitch(): number {
-        if (!pitch_enabled) {
-            sensor_bitmask != 0x00040000;
-            set_sensor_streaming_mask(sensor_bitmask);
-            pitch_enabled = true;
-        }
-
-        return _pitch;
-    }
-
-    //% block="roll"
-    //% subcategory=Sensors
-    export function Roll(): number {
-        if (!roll_enabled) {
-            sensor_bitmask != 0x00020000;
-            set_sensor_streaming_mask(sensor_bitmask);
-            roll_enabled = true;
-        }
-        return _roll;
     }
 }

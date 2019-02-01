@@ -1,6 +1,6 @@
 // Add your code here
 
-namespace message {
+namespace spheroMessage {
     export interface IApiMessage {
         readonly flags: number;
         readonly sequenceNumber: number;
@@ -50,11 +50,11 @@ namespace message {
         }
 
         public get isResponse(): boolean {
-            return (this.flags & (flags.ApiFlags.isResponse)) == (flags.ApiFlags.isResponse);
+            return (this.flags & (SpheroApiFlags.isResponse)) == (SpheroApiFlags.isResponse);
         }
 
         public get isRequestingResponse(): boolean {
-            return (this.flags & (flags.ApiFlags.requestsResponse)) == (flags.ApiFlags.requestsResponse);
+            return (this.flags & (SpheroApiFlags.requestsResponse)) == (SpheroApiFlags.requestsResponse);
         }
 
         protected _targetId: number;

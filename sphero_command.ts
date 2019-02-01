@@ -1,11 +1,11 @@
 // Add your code here
 
-namespace command {
-    interface IApiCommandMessage extends message.IApiMessage {
+namespace spheroMessage{
+    interface IApiCommandMessage extends IApiMessage {
         readonly commandRawBytes: Array<number>;
     }
 
-    class ApiCommandMessage extends message.ApiBaseMessage implements IApiCommandMessage {
+    class ApiCommandMessage extends ApiBaseMessage implements IApiCommandMessage {
         public get messageRawBytes(): Array<number> {
             return this._commandRawBytes;
         }
@@ -32,17 +32,17 @@ namespace command {
 
         private encodeByteInBytes(bytes: Array<number>, byte: number): void {
             switch (byte) {
-                case flags.ApiParserFlags.startOfPacket:
-                    bytes.push(flags.ApiParserFlags.escape);
-                    bytes.push(flags.ApiParserFlags.escapedStartOfPacket);
+                case SpheroApiParserFlags.startOfPacket:
+                    bytes.push(SpheroApiParserFlags.escape);
+                    bytes.push(SpheroApiParserFlags.escapedStartOfPacket);
                     break;
-                case flags.ApiParserFlags.endOfPacket:
-                    bytes.push(flags.ApiParserFlags.escape);
-                    bytes.push(flags.ApiParserFlags.escapedEndOfPacket);
+                case SpheroApiParserFlags.endOfPacket:
+                    bytes.push(SpheroApiParserFlags.escape);
+                    bytes.push(SpheroApiParserFlags.escapedEndOfPacket);
                     break;
-                case flags.ApiParserFlags.escape:
-                    bytes.push(flags.ApiParserFlags.escape);
-                    bytes.push(flags.ApiParserFlags.escapedEscape);
+                case SpheroApiParserFlags.escape:
+                    bytes.push(SpheroApiParserFlags.escape);
+                    bytes.push(SpheroApiParserFlags.escapedEscape);
                     break;
                 default:
                     bytes.push(byte);
@@ -55,18 +55,18 @@ namespace command {
             let checksum = 0;
             this._commandRawBytes = []
 
-            this._commandRawBytes.push(flags.ApiParserFlags.startOfPacket);
+            this._commandRawBytes.push(SpheroApiParserFlags.startOfPacket);
 
             this.encodeByteInBytes(this._commandRawBytes, this.flags);
             checksum += this.flags;
 
 
-            if ((this.flags & flags.ApiFlags.packetHasTargetId) > 0x00) {
+            if ((this.flags & SpheroApiFlags.packetHasTargetId) > 0x00) {
                 this.encodeByteInBytes(this._commandRawBytes, this.targetId);
                 checksum += this.targetId;
             }
 
-            if ((this.flags & flags.ApiFlags.packetHasSourceId) > 0x00) {
+            if ((this.flags & SpheroApiFlags.packetHasSourceId) > 0x00) {
                 this.encodeByteInBytes(this._commandRawBytes, this.sourceId);
                 checksum += this.sourceId;
             }
@@ -93,7 +93,7 @@ namespace command {
 
             this.encodeByteInBytes(this._commandRawBytes, checksum);
 
-            this._commandRawBytes.push(flags.ApiParserFlags.endOfPacket);
+            this._commandRawBytes.push(SpheroApiParserFlags.endOfPacket);
         }
     }
 
@@ -125,7 +125,7 @@ namespace command {
         commandId: number, commandName: string,
         dataRawBytes: Array<number> | null = null): IApiCommandMessage {
 
-        let message_flags: number = flags.ApiFlags.defaultRequestWithResponseFlags;
+        let message_flags: number = SpheroApiFlags.defaultRequestWithResponseFlags;
         let sequenceNumber: number = 0x00;  // TODO: own sequence number here?
 
         let apiMessage: IApiCommandMessage = new ApiCommandMessage(
