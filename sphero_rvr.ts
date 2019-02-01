@@ -36,7 +36,27 @@ enum SpheroRvrRgbLeds {
  */
 //% weight=100 color=#00A654 icon="\uf0e7" block="Sphero RVR"
 namespace spheroRvr {
+    let sourceID = 0x01;
     let currentHeading: number = 0;
+
+    enum Devices {
+        drive = 0x16,
+        user_io = 0x1A
+    }
+
+    enum DriveCommands{
+        drive = 0x07,
+        raw_motors = 0x01
+    }
+
+    enum UserIoCommands {
+        set_leds_with_32_bitmask = 0x1A
+    }
+
+    enum Targets {
+        leds = 0x11,
+        drive = 0x12
+    }
 
     /**
      * Drive with a Heading from 0 to 359 and a speed from -255 to +255
@@ -55,12 +75,21 @@ namespace spheroRvr {
 
         let msg_data: Array<number> = [Math.abs(speed)];
         let headingArray: Array<number> = SpheroUtilities.int16ToByteArray(currentHeading);
-        for (let i: number = 0; i < 2; i++) {
-            msg_data[i + 1] = headingArray[i];
+        for (let i: number = 0; i < headingArray.length; i++) {
+            msg_data.push(headingArray[i]);
         }
-        msg_data[3] = flags;
+        msg_data.push(flags);
 
-        let msg = spheroMessage.buildApiCommandMessageWithDefaultFlags(0x12, 0x01, 0x16, "", 0x07, "", msg_data);
+        let msg = spheroMessage.buildApiCommandMessageWithDefaultFlags(
+            Targets.drive,
+            sourceID,
+            Devices.drive,
+            "",
+            DriveCommands.drive,
+            "",
+            msg_data
+        );
+
         serial.writeBuffer(pins.createBufferFromArray(msg.commandRawBytes));
     }
 
@@ -76,12 +105,21 @@ namespace spheroRvr {
 
         let msg_data: Array<number> = [speed];
         let headingArray: Array<number> = SpheroUtilities.int16ToByteArray(currentHeading);
-        for (let i: number = 0; i < 2; i++) {
-            msg_data[i + 1] = headingArray[i];
+        for (let i: number = 0; i < headingArray.length; i++) {
+            msg_data.push(headingArray[i]);
         }
-        msg_data[3] = flags;
+        msg_data.push(flags);
 
-        let msg = spheroMessage.buildApiCommandMessageWithDefaultFlags(0x12, 0x01, 0x16, "", 0x07, "", msg_data);
+        let msg = spheroMessage.buildApiCommandMessageWithDefaultFlags(
+            Targets.drive,
+            sourceID,
+            Devices.drive,
+            "",
+            DriveCommands.drive,
+            "",
+            msg_data
+        );
+
         serial.writeBuffer(pins.createBufferFromArray(msg.commandRawBytes));
     }
 
@@ -92,36 +130,64 @@ namespace spheroRvr {
     //% left_speed.min=0 left_speed.max=255
     //% right_speed.min=0 right_speed.max=255
     //% subcategory=Movement
-    export function rawMotors(left_mode: SpheroRvrMotorMode, left_speed: number, right_mode: SpheroRvrMotorMode, right_speed: number): void {
+    export function raw_motors(left_mode: SpheroRvrMotorMode, left_speed: number, right_mode: SpheroRvrMotorMode, right_speed: number): void {
         let msg_data: Array<number> = [left_mode, left_speed, right_mode, right_speed];
-        let msg = spheroMessage.buildApiCommandMessageWithDefaultFlags(0x12, 0x01, 0x16, "", 0x01, "", msg_data);
+
+        let msg = spheroMessage.buildApiCommandMessageWithDefaultFlags(
+            Targets.drive,
+            sourceID,
+            Devices.drive,
+            "",
+            DriveCommands.raw_motors,
+            "",
+            msg_data
+        );
+
         serial.writeBuffer(pins.createBufferFromArray(msg.commandRawBytes));
     }
 
+    /**
+     * Set all RGB LEDs on the RVR to one RGB value
+     */
     //% block="set all LEDs to red:%red| green:%green| blue:%blue|"
+    //% help=spheroRvr/set_all_leds
     //% red.min=0 red.max=255
     //% green.min=0 green.max=255
     //% blue.min=0 blue.max=255
     //% subcategory=Lights
     export function set_all_leds(red: number, green: number, blue: number): void {
         let led_bitmask: Array<number> = [0x3F, 0xFF, 0xFF, 0xFF];
+        
         let led_data: Array<number> = [];
         for (let i: number = 0; i < 30; i += 3) {
-            led_data[i] = red;
-            led_data[i + 1] = green;
-            led_data[i + 2] = blue;
+            led_data.push(red);
+            led_data.push(green);
+            led_data.push(blue);
         }
 
         let msg_data: Array<number> = led_bitmask;
         for (let i: number = 0; i < led_data.length; i++) {
-            msg_data[i + 4] = led_data[i];
+            msg_data.push(led_data[i]);
         }
 
-        let msg = spheroMessage.buildApiCommandMessageWithDefaultFlags(0x11, 0x01, 0x1A, "", 0x1A, "", msg_data);
+        let msg = spheroMessage.buildApiCommandMessageWithDefaultFlags(
+            Targets.leds,
+            sourceID,
+            Devices.user_io,
+            "",
+            UserIoCommands.set_leds_with_32_bitmask,
+            "",
+            msg_data
+        );
+
         serial.writeBuffer(pins.createBufferFromArray(msg.commandRawBytes));
     }
 
+    /**
+     * Set one individual RGB LED on the RVR to a specific RGB value
+     */
     //% block="set RGB LED:%index| to red:%red| green:%green| blue:%blue|"
+    //% help=spheroRvr/set_rgb_led_by_index
     //% red.min=0 red.max=255
     //% green.min=0 green.max=255
     //% blue.min=0 blue.max=255
@@ -133,20 +199,40 @@ namespace spheroRvr {
 
         let msg_data: Array<number> = led_bitmask;
         for (let i: number = 0; i < led_data.length; i++) {
-            msg_data[i + 4] = led_data[i];
+            msg_data.push(led_data[i]);
         }
 
-        let msg = spheroMessage.buildApiCommandMessageWithDefaultFlags(0x11, 0x01, 0x1A, "", 0x1A, "", msg_data);
+        let msg = spheroMessage.buildApiCommandMessageWithDefaultFlags(
+            Targets.leds,
+            sourceID,
+            Devices.user_io,
+            "",
+            UserIoCommands.set_leds_with_32_bitmask,
+            "",
+            msg_data
+        )
         serial.writeBuffer(pins.createBufferFromArray(msg.commandRawBytes));
     }
 
+    /**
+     * Set the intensity of the RVR's white undercarriage LED.
+     */
     //% block="set Undercarriage LED to %intensity|"
+    //% help=spheroRvr/set_undercarriage_white_led
     //% intensity.min=0 intensity.max=255
     //% subcategory=Lights
     export function set_undercarriage_white_led(intensity: number): void {
         let msg_data: Array<number> = [0x40, 0x00, 0x00, 0x00, intensity];
 
-        let msg = spheroMessage.buildApiCommandMessageWithDefaultFlags(0x11, 0x01, 0x1A, "", 0x1A, "", msg_data);
+        let msg = spheroMessage.buildApiCommandMessageWithDefaultFlags(
+            Targets.leds,
+            sourceID,
+            Devices.user_io,
+            "",
+            UserIoCommands.set_leds_with_32_bitmask,
+            "",
+            msg_data
+        )
 
         serial.writeBuffer(pins.createBufferFromArray(msg.commandRawBytes));
     }

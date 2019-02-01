@@ -13,7 +13,7 @@
   "SpheroRvrRgbLeds.side_1|block": "Side 1",
   "SpheroRvrRgbLeds.side_2|block": "Side 2",
   "spheroRvr.drive|block": "drive with %heading|Heading and %speed|Speed",
-  "spheroRvr.rawMotors|block": "set raw motors with Left Mode:%left_mode| Left Speed:%left_speed| Right Mode:%right_mode| Right Speed:%right_speed|",
+  "spheroRvr.raw_motors|block": "set raw motors with Left Mode:%left_mode| Left Speed:%left_speed| Right Mode:%right_mode| Right Speed:%right_speed|",
   "spheroRvr.set_all_leds|block": "set all LEDs to red:%red| green:%green| blue:%blue|",
   "spheroRvr.set_rgb_led_by_index|block": "set RGB LED:%index| to red:%red| green:%green| blue:%blue|",
   "spheroRvr.set_undercarriage_white_led|block": "set Undercarriage LED to %intensity|",
