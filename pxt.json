@@ -1,7 +1,7 @@
 {
     "name": "sphero-rvr",
     "version": "0.0.0",
-    "description": "",
+    "description": "Use this extension to control a Sphero RVR",
     "dependencies": {
         "core": "*",
         "radio": "*"
