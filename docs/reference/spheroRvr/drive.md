@@ -1,23 +1,23 @@
 # drive
 
 ```sig
-spheroRvr.drive(heading, speed)
+spheroRvr.drive(speed, heading)
 ```
 
 ## Parameters
 
+* **speed**: The speed you want to travel. Use negative values to go in reverse!
 * **heading**: The direction you want to drive.
-* **speed**: The speed you want to travel.  Use negative values to go in reverse!
 
 ## Example
 
 ```blocks
-spheroRvr.drive(135, -100);
+spheroRvr.drive(-100, 135);
 ```
 
 ## See also
 
-[stop](/reference/spheroRvr/stop)
+[stop](/reference/spheroRvr/stop.md)
 
 ```package
 spheroRvr

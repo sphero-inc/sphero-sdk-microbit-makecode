@@ -1,17 +1,22 @@
 # stop
 
 ```sig
-spheroRvr.stop()
+spheroRvr.stop(heading)
 ```
-# Example
+
+## Parameters
+
+* **heading**: The RVR's current heading.
+
+## Example
 
 ```blocks
-spheroRvr.stop()
+spheroRvr.stop(180);
 ```
 
 ## See also
 
-[drive](/reference/spheroRvr/drive)
+[drive](/reference/spheroRvr/drive.md)
 
 ```package
 spheroRvr

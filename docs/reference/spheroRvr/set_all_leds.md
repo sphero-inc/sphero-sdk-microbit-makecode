@@ -1,7 +1,7 @@
 # set_all_leds
 
 ```sig
-spheroRvr.set_all_leds(95, 158, 160);
+spheroRvr.set_all_leds(red, green, blue)
 ```
 
 ## Parameters
@@ -13,12 +13,12 @@ spheroRvr.set_all_leds(95, 158, 160);
 ## Example
 
 ```blocks
-spheroRvr.set_all_leds(95, 158, 160);
+spheroRvr.set_all_leds(149, 218, 245);
 ```
 
 ## See also
 
-[set_rgb_led_by_index](/reference/spheroRvr/set_rgb_led_by_index), [set_undercarriage_while_led](/reference/spheroRvr/set_undercarriage_white_led)
+[set_rgb_led_by_index](/reference/spheroRvr/set_rgb_led_by_index.md)
 
 ```package
 spheroRvr
