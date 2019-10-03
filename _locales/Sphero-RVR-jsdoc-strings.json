@@ -1,9 +1,11 @@
 {
   "spheroRvr": "Control A Sphero RVR Using these Commands",
   "spheroRvr.drive": "Drive with a Heading from 0 to 359 and a speed from -255 to +255",
-  "spheroRvr.raw_motors": "Manually control the left and right motors",
+  "spheroRvr.set_raw_motors": "Manually control the left and right motors",
+  "spheroRvr.reset_yaw": "Set the current yaw angle to zero",
   "spheroRvr.set_all_leds": "Set all RGB LEDs on the RVR to one RGB value",
   "spheroRvr.set_rgb_led_by_index": "Set one individual RGB LED on the RVR to a specific RGB value",
-  "spheroRvr.set_undercarriage_white_led": "Set the intensity of the RVR's white undercarriage LED.",
-  "spheroRvr.stop": "Stop the Robot from Driving"
+  "spheroRvr.stop": "Stop the RVR from Driving",
+  "spheroRvr.wake": "Wake the RVR from sleep",
+  "spheroRvr.sleep": "Put the RVR in a soft sleep state"
 }

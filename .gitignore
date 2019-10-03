@@ -1,8 +1,14 @@
-built
+# Specific files
+package-lock.json
+
+# Specific file types
+*.d.ts
+*.js.map
+*.js
+
+# Node Modules directory
 node_modules
-yotta_modules
-yotta_targets
-pxt_modules
-*.db
-*.tgz
-.header.json
+dist
+
+# JetBrains WebStorm directory
+.idea/*

@@ -8,15 +8,15 @@
     },
     "files": [
         "README.md",
-        "sphero_rvr.ts",
-        "sphero_constants.ts",
-        "sphero_message.ts",
-        "sphero_command.ts",
-        "sphero_utilities.ts"
+        "rvr.ts",
+        "constants.ts",
+        "message.ts",
+        "utilities.ts"
     ],
     "testFiles": [
         "test.ts"
     ],
     "public": false,
-    "installedVersion": "workspace:d01b20af-0e9a-47ee-5246-f34f4cbd1c91"
+    "installedVersion": "workspace:966fc96b-b38d-405b-a590-00077d99893c",
+    "preferredEditor": "tsprj"
 }

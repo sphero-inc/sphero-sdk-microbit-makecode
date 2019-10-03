@@ -1,22 +1,26 @@
 # spheroRvr
 
-Use this extension control a Sphero RVR
+Use this extension to control a Sphero RVR
 
 ## Reference
 
 ```cards
 
-spheroRvr.drive(10, -20);
+spheroRvr.drive(-30, 90);
 
-spheroRvr.stop();
+spheroRvr.stop(90);
 
-spheroRvr.raw_motors(SpheroRvrMotorMode.forward, 255, SpheroRvrMotorMode.backward, 255);
+spheroRvr.set_raw_motors(RawMotorModes.Forward, 150, RawMotorModes.Backward, 150);
 
-spheroRvr.set_all_leds(95, 158, 160);
+spheroRvr.reset_yaw();
 
-spheroRvr.set_rgb_led_by_index(SpheroRvrRgbLeds.right_headlight, 95, 158, 160);
+spheroRvr.set_all_leds(168, 159, 201);
 
-spheroRvr.set_undercarriage_white_led(127);
+spheroRvr.set_rgb_led_by_index(LEDs.RightHeadlight, 252, 143, 126);
+
+spheroRvr.wake();
+
+spheroRvr.sleep();
 
 ```
 
