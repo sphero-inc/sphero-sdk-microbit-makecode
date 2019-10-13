@@ -1,8 +1,7 @@
 {
-    "name": "pxt-sphero-rvr-sdk",
+    "name": "SpheroRVR",
     "version": "1.0.0",
     "description": "Sphero RVR SDK to use with micro:bit to control a Sphero RVR Robot.",
-    "icon": "./icon.png",
     "files": [
         "README.md",
         "LICENSE.md",
