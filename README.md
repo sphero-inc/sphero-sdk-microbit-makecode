@@ -1,6 +1,6 @@
 # Sphero RVR SDK for micro:bit MakeCode
 
-This module contains the set of commands that allow the micro:bit to communicate with the RVR using MakeCode.
+This module contains the set of commands that allow the micro:bit to communicate with the [Sphero RVR](https://www.sphero.com/rvr) robot using MakeCode.
 
 The following commands are available in this module:
 
