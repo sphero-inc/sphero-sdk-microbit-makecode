@@ -1,7 +1,7 @@
-# set_all_leds
+# setAllLeds
 
 ```sig
-spheroRvr.set_all_leds(red, green, blue)
+spheroRvr.setAllLeds(red, green, blue)
 ```
 
 ## Parameters
@@ -13,12 +13,12 @@ spheroRvr.set_all_leds(red, green, blue)
 ## Example
 
 ```blocks
-spheroRvr.set_all_leds(149, 218, 245);
+spheroRvr.setAllLeds(149, 218, 245);
 ```
 
 ## See also
 
-[set_rgb_led_by_index](/reference/spheroRvr/set_rgb_led_by_index.md)
+[setRgbLedByIndex](/reference/spheroRvr/setRgbLedByIndex.md)
 
 ```package
 spheroRvr
