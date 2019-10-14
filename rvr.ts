@@ -1,7 +1,7 @@
 /**
- * Control a Sphero RVR using these commands
+ * Control a Sphero RVR using these commands.
  */
-//% weight=100 color=#9BC2F2 icon="\uf0e7" block="Sphero RVR"
+//% weight=100 color=#8527D7 icon="\uf120" block="Sphero RVR"
 namespace sphero {
     /**
      * Drive with a speed from -255 to +255 and a heading from 0 to 359
@@ -71,13 +71,13 @@ namespace sphero {
     /**
      * Manually control the left and right motors
      */
-    //% block="set raw motors with left mode:%left_mode| left speed:%left_speed| right mode:%right_mode| right speed:%right_speed|"
-    //% help=spheroRvr/set_raw_motors
-    //% left_speed.min=0 left_speed.max=255
-    //% right_speed.min=0 right_speed.max=255
+    //% block="set raw motors with left mode:%leftMode| left speed:%leftSpeed| right mode:%rightMode| right speed:%rightSpeed|"
+    //% help=spheroRvr/setRawMotors
+    //% leftSpeed.min=0 leftSpeed.max=255
+    //% rightSpeed.min=0 rightSpeed.max=255
     //% subcategory=Movement
-    export function set_raw_motors(left_mode: RawMotorModes, left_speed: number, right_mode: RawMotorModes, right_speed: number): void {
-        let messageData: Array<number> = [left_mode, left_speed, right_mode, right_speed];
+    export function setRawMotors(leftMode: RawMotorModes, leftSpeed: number, rightMode: RawMotorModes, rightSpeed: number): void {
+        let messageData: Array<number> = [leftMode, leftSpeed, rightMode, rightSpeed];
 
         let apiMessage = buildApiCommandMessageWithDefaultFlags(
             ApiTargetsAndSources.robotStTarget,
@@ -94,9 +94,9 @@ namespace sphero {
      * Set the current yaw angle to zero
      */
     //% block="reset the yaw"
-    //% help=spheroRvr/reset_yaw
+    //% help=spheroRvr/resetYaw
     //% subcategory=Movement
-    export function reset_yaw(): void {
+    export function resetYaw(): void {
         let apiMessage = buildApiCommandMessageWithDefaultFlags(
             ApiTargetsAndSources.robotStTarget,
             ApiTargetsAndSources.serviceSource,
@@ -112,12 +112,12 @@ namespace sphero {
      * Set all RGB LEDs on the RVR to one RGB value
      */
     //% block="set all LEDs to red:%red| green:%green| blue:%blue|"
-    //% help=spheroRvr/set_all_leds
+    //% help=spheroRvr/setAllLeds
     //% red.min=0 red.max=255
     //% green.min=0 green.max=255
     //% blue.min=0 blue.max=255
     //% subcategory=Lights
-    export function set_all_leds(red: number, green: number, blue: number): void {
+    export function setAllLeds(red: number, green: number, blue: number): void {
         let ledBitmask: Array<number> = [0x3F, 0xFF, 0xFF, 0xFF];
 
         let messageData: Array<number> = ledBitmask;
@@ -142,12 +142,12 @@ namespace sphero {
      * Set one individual RGB LED on the RVR to a specific RGB value
      */
     //% block="set RGB LED:%index| to red:%red| green:%green| blue:%blue|"
-    //% help=spheroRvr/set_rgb_led_by_index
+    //% help=spheroRvr/setRgbLedByIndex
     //% red.min=0 red.max=255
     //% green.min=0 green.max=255
     //% blue.min=0 blue.max=255
     //% subcategory=Lights
-    export function set_rgb_led_by_index(index: LEDs, red: number, green: number, blue: number): void {
+    export function setRgbLedByIndex(index: LEDs, red: number, green: number, blue: number): void {
         let ledBitValue: number = (0x07 << index);
         let ledBitmask: Array<number> = Utilities.int32ToByteArray(ledBitValue);
         let ledData: Array<number> = [red, green, blue];

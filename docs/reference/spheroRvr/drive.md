@@ -17,7 +17,7 @@ spheroRvr.drive(-100, 135);
 
 ## See also
 
-[stop](/reference/spheroRvr/stop.md)
+[stop](/reference/spheroRvr/stop.md), [resetYaw](/reference/spheroRvr/resetYaw.md), [setRawMotors](/reference/spheroRvr/setRawMotors.md)
 
 ```package
 spheroRvr

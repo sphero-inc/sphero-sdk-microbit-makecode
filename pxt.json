@@ -1,22 +1,22 @@
 {
-    "name": "sphero-rvr",
-    "version": "0.0.0",
-    "description": "Use this extension to control a Sphero RVR",
+    "name": "SpheroRVR",
+    "version": "1.0.0",
+    "description": "Sphero RVR SDK to use with micro:bit to control a Sphero RVR Robot.",
+    "files": [
+        "README.md",
+        "LICENSE.md",
+        "utilities.ts",
+        "rvr.ts",
+        "constants.ts",
+        "message.ts"
+    ],
     "dependencies": {
         "core": "*",
         "radio": "*"
     },
-    "files": [
-        "README.md",
-        "rvr.ts",
-        "constants.ts",
-        "message.ts",
-        "utilities.ts"
-    ],
     "testFiles": [
-        "test.ts"
+        "tests.ts"
     ],
-    "public": false,
-    "installedVersion": "workspace:966fc96b-b38d-405b-a590-00077d99893c",
+    "public": true,
     "preferredEditor": "tsprj"
 }
