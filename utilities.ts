@@ -41,5 +41,9 @@ namespace sphero {
 
             return value;
         }
+        public static reverseNibbles(nibbles: Array<number>): Array<number> {
+            nibbles.reverse();
+            return nibbles;
+        }
     }
 }

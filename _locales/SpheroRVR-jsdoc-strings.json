@@ -1,0 +1,11 @@
+{
+  "sphero": "Control a Sphero RVR using these commands.",
+  "sphero.drive": "Drive with a speed from -255 to +255 and a heading from 0 to 359",
+  "sphero.resetYaw": "Set the current yaw angle to zero",
+  "sphero.setAllLeds": "Set all RGB LEDs on the RVR to one RGB value",
+  "sphero.setRawMotors": "Manually control the left and right motors",
+  "sphero.setRgbLedByIndex": "Set one individual RGB LED on the RVR to a specific RGB value",
+  "sphero.sleep": "Put the RVR in a soft sleep state",
+  "sphero.stop": "Stop the RVR from driving with the given heading",
+  "sphero.wake": "Wake the RVR from sleep"
+}

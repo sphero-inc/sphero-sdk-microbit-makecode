@@ -19,41 +19,41 @@ namespace sphero {
     }
 
     export class ApiTargetsAndSources {
-        public static readonly robotNordicTarget: number = Utilities.nibblesToByte([1, 1].reverse());
-        public static readonly robotStTarget: number = Utilities.nibblesToByte([1, 2].reverse());
-        public static readonly serviceSource: number = Utilities.nibblesToByte([0, 1].reverse());
+        public static readonly robotNordicTarget: number = Utilities.nibblesToByte(Utilities.reverseNibbles([1, 1]));
+        public static readonly robotStTarget: number = Utilities.nibblesToByte(Utilities.reverseNibbles([1, 2]));
+        public static readonly serviceSource: number = Utilities.nibblesToByte(Utilities.reverseNibbles([0, 1]));
     }
 
     export enum RawMotorModes {
         //% block="Off"
-        Off = 0,
+        off = 0,
         //% block="Forward"
-        Forward = 1,
+        forward = 1,
         //% block="Backward"
-        Backward = 2
+        backward = 2
     }
 
     export enum LEDs {
         //% block="Right Headlight"
-        RightHeadlight = 0,
+        rightHeadlight = 0,
         //% block="Left Headlight"
-        LeftHeadlight = 3,
+        leftHeadlight = 3,
         //% block="Left Status"
-        LeftStatus = 6,
+        leftStatus = 6,
         //% block="Right Status"
-        RightStatus = 9,
+        rightStatus = 9,
         //% block="Battery Door Rear"
-        BatteryDoorRear = 12,
+        batteryDoorRear = 12,
         //% block="Battery Door Front"
-        BatteryDoorFront = 15,
+        batteryDoorFront = 15,
         //% block="Power Button Front"
-        PowerButtonFront = 18,
+        powerButtonFront = 18,
         //% block="Power Button Rear"
-        PowerButtonRear = 21,
+        powerButtonRear = 21,
         //% block="Left Brakelight"
-        LeftBrakelight = 24,
+        leftBrakelight = 24,
         //% block="Right Brakelight"
-        RightBrakelight = 27
+        rightBrakelight = 27
     }
 
     export class DriveCommands {
