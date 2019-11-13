@@ -14,7 +14,7 @@
         "radio": "*"
     },
     "testFiles": [
-        "tests.ts"
+        "test.ts"
     ],
     "public": true,
     "preferredEditor": "tsprj"
