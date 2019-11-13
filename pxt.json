@@ -4,7 +4,6 @@
     "description": "Sphero RVR SDK to use with micro:bit to control a Sphero RVR Robot.",
     "files": [
         "README.md",
-        "LICENSE.md",
         "utilities.ts",
         "rvr.ts",
         "constants.ts",
